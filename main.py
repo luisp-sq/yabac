@@ -4,15 +4,14 @@ import logging
 def validate_csv_columns(file_path):
     required_columns = ['customer_token', 'action']
     valid_actions = {'initial_screen', 'remove'}  # Using a set for faster membership testing
-    
-    logging.basicConfig(filename='logs/validation.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
     success = False
     
     try:
+        logging.info(f"START - Validation for file name: {file_path}")
         with open(file_path, newline='') as csvfile:
             reader = csv.DictReader(csvfile)
-            logging.info(f"START - Validation for file name: {file_path}")
+            
             
             if not all(column in reader.fieldnames for column in required_columns):
                 print(f"Error: Missing columns in CSV file - {', '.join(set(required_columns) - set(reader.fieldnames))}")
@@ -60,7 +59,6 @@ def screen (customer_token, screen_intent, service_address):
     pass
 
 def process_csv(file_path, service_address):
-    logging.basicConfig(filename='logs/processing.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
     try:
         logging.info(f"START - Processing file: {file_path}")
@@ -89,6 +87,7 @@ def process_csv(file_path, service_address):
 if __name__ == "__main__":
     csv_file_path = 'data/test.csv'
     grpc_service_address = "localhost:50051"
+    logging.basicConfig(filename='logs/main.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
     if validate_csv_columns(csv_file_path):
         # Proceed with further processing or API calls
